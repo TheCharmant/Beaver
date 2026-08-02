@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import emailjs from "@emailjs/browser";
-import Image from "next/image";
 import "./contact.css";
 
 const packages = [
@@ -118,20 +117,14 @@ export default function Home() {
       setSubmitError("Failed to send your message. Please try again.");
     }
   };
-  return <main className="site-shell">
-    <nav className="nav"><a href="#top" className="brand brand-logo" aria-label="Beaver Solutions home"><Image src="/logo.png" alt="Beaver Solutions" width={198} height={60} priority /></a><div className="nav-links"><a href="#packages">Packages</a><a href="#process">How it works</a><a href="#faq">FAQ</a></div><a href="#contact" className="nav-cta">Let&apos;s talk <ArrowRight size={15}/></a><button className="menu" aria-label="Open menu"><Menu /></button></nav>
+  return <main>
+    <nav className="nav"><a href="#top" className="brand"><span className="brand-mark">B</span><span>BEAVER</span></a><div className="nav-links"><a href="#packages">Packages</a><a href="#process">How it works</a><a href="#faq">FAQ</a></div><a href="#contact" className="nav-cta">Let&apos;s talk <ArrowRight size={15}/></a><button className="menu" aria-label="Open menu"><Menu /></button></nav>
     <section className="hero" id="top">
       <div className="hero-glow" />
       <motion.p initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="eyebrow"><Sparkles size={14}/> BE A VERsion of Success.</motion.p>
       <motion.h1 initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{delay:.1}}>Build with clarity.<br/><em>Defend with confidence.</em></motion.h1>
       <motion.p initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:.2}} className="hero-copy">We help students transform ideas into high-quality research and software through expert mentoring, software deengineering support, technical consultation, documentation guidance, and defense preparation.</motion.p>
       <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} transition={{delay:.3}} className="hero-actions"><a href="#contact" className="button button-primary">Start your project <ArrowRight size={17}/></a><a href="#packages" className="text-link">Explore packages <ArrowRight size={16}/></a></motion.div>
-      <motion.div initial={{opacity:0, y:30, scale:.96}} animate={{opacity:1, y:0, scale:1}} transition={{delay:.38, duration:.7}} className="hero-visual" aria-hidden="true">
-        <div className="hero-orb hero-orb-one" /><div className="hero-orb hero-orb-two" />
-        <div className="cover-frame"><Image src="/cover.png" alt="" fill priority sizes="(max-width: 760px) 92vw, 860px" /></div>
-        <div className="glass-chip chip-top"><span className="chip-dot" /> Research to defense</div>
-        <div className="glass-chip chip-bottom"><Sparkles size={14} /> Built with purpose</div>
-      </motion.div>
       <div className="hero-note"><span></span> Trusted support for every stage of your academic journey <span></span></div>
     </section>
     <section className="intro"><p className="section-tag">WHAT WE DO</p><h2>From a rough idea to a polished final defense.</h2><p>We pair research rigor with practical engineering experience. The result? Structured projects that feel purposeful, polished, and ready for evaluation.</p><div className="stats"><div><strong>4</strong><span>core areas of support</span></div><div><strong>1:1</strong><span>project-focused guidance</span></div><div><strong>∞</strong><span>ideas worth building</span></div></div></section>
