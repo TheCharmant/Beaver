@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import emailjs from "@emailjs/browser";
+import Image from "next/image";
 import "./contact.css";
 
 const packages = [
@@ -118,7 +119,7 @@ export default function Home() {
     }
   };
   return <main>
-    <nav className="nav"><a href="#top" className="brand"><span className="brand-mark">B</span><span>BEAVER</span></a><div className="nav-links"><a href="#packages">Packages</a><a href="#process">How it works</a><a href="#faq">FAQ</a></div><a href="#contact" className="nav-cta">Let&apos;s talk <ArrowRight size={15}/></a><button className="menu" aria-label="Open menu"><Menu /></button></nav>
+    <nav className="nav"><a href="#top" className="brand brand-logo" aria-label="Beaver Solutions home"><Image src="/logo.jpg" alt="Beaver Solutions" width={1600} height={1600} priority /></a><div className="nav-links"><a href="#packages">Packages</a><a href="#process">How it works</a><a href="#faq">FAQ</a></div><a href="#contact" className="nav-cta">Let&apos;s talk <ArrowRight size={15}/></a><button className="menu" aria-label="Open menu"><Menu /></button></nav>
     <section className="hero" id="top">
       <div className="hero-glow" />
       <motion.p initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="eyebrow"><Sparkles size={14}/> BE A VERsion of Success.</motion.p>
@@ -183,7 +184,7 @@ export default function Home() {
 
 </section>
     <section className="faq" id="faq"><div><p className="section-tag">QUESTIONS, ANSWERED</p><h2>Good work starts<br/>with a good conversation.</h2></div><div className="faq-list">{faqs.map(([q,a],i)=><button key={q} onClick={()=>setOpenFaq(openFaq===i?null:i)} className={openFaq===i?"faq-item open":"faq-item"}><div><span>{q}</span><ChevronDown size={18}/></div>{openFaq===i&&<p>{a}</p>}</button>)}</div></section>
-    <section className="contact" id="contact"><p className="section-tag">START HERE</p><h2>Make your next project<br/><em>your best work.</em></h2><p>Tell us what you&apos;re building. We&apos;ll help you map the way forward.</p>{sent ? <p className="success">Thank you — your message has been sent. We&apos;ll be in touch soon.</p> : <form onSubmit={handleSubmit(submitInquiry)} className="inquiry-form"><div><input aria-label="Your name" placeholder="Your name" {...register("name")}/>{errors.name && <small>{errors.name.message}</small>}</div><div><input aria-label="Email address" placeholder="Email address" type="email" {...register("email")}/>{errors.email && <small>{errors.email.message}</small>}</div><div className="message-field"><textarea aria-label="Message" placeholder="Tell us about your project" rows={3} {...register("message")}/>{errors.message && <small>{errors.message.message}</small>}</div><button className="button button-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending..." : <>Submit <ArrowRight size={17}/></>}</button>{submitError && <small className="submit-error">{submitError}</small>}</form>}</section>
-    <footer><a className="brand" href="#top"><span className="brand-mark">B</span><span>BEAVER</span></a><p>Student Research & Software Development Support</p><span>© 2026 BeaverSolution</span></footer>
+    <section className="contact" id="contact"><p className="section-tag">START HERE</p><h2>Make your next project<br/><em>your best work.</em></h2><p>Tell us what you&apos;re building. We&apos;ll help you map the way forward.</p>{sent ? <p className="success">Thank you — your message has been sent. We&apos;ll be in touch soon. Please check your spam folder if you don&apos;t see our confirmation email.</p> : <form onSubmit={handleSubmit(submitInquiry)} className="inquiry-form"><div><input aria-label="Your name" placeholder="Your name" {...register("name")}/>{errors.name && <small>{errors.name.message}</small>}</div><div><input aria-label="Email address" placeholder="Email address" type="email" {...register("email")}/>{errors.email && <small>{errors.email.message}</small>}</div><div className="message-field"><textarea aria-label="Message" placeholder="Tell us about your project" rows={3} {...register("message")}/>{errors.message && <small>{errors.message.message}</small>}</div><button className="button button-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending..." : <>Submit <ArrowRight size={17}/></>}</button>{submitError && <small className="submit-error">{submitError}</small>}</form>}</section>
+    <footer><a className="brand brand-logo" href="#top" aria-label="Beaver Solutions home"><Image src="/logo.jpg" alt="Beaver Solutions" width={1600} height={1600} /></a><p>Student Research & Software Development Support</p><span>© 2026 BeaverSolutions</span></footer>
   </main>;
 }
