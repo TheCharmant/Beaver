@@ -112,7 +112,7 @@ function BundleBuilder({ onRequest }: { onRequest: (message: string) => void }) 
   return <section className="bundle" aria-labelledby="bundle-title">
     <div className="bundle-content">
       <p className="section-tag">BUILD YOUR BUNDLE</p>
-      <h3 id="bundle-title">Pick the support your<br/>project actually needs.</h3>
+      <h2 id="bundle-title">Pick the support your<br/>project actually needs.</h2>
       <p>Choose what you need, put it together, and get a clear quotation range before we talk details.</p>
       <div className="bundle-available" aria-label="Available packages">
         {bundlePackages.map((pkg) => {
@@ -132,7 +132,7 @@ function BundleBuilder({ onRequest }: { onRequest: (message: string) => void }) 
       <div className={`quote-panel${chosen.length ? " has-quote" : ""}`} aria-live="polite">
         <div><p>Your Bundle</p><strong>{chosen.length ? `${chosen.length} ${chosen.length === 1 ? "package" : "packages"} selected` : "Start building"}</strong></div>
         {chosen.length ? <><div className="quote-row"><span>Individual total</span><strong>{formatPeso(individualMin)}–{formatPeso(individualMax)}</strong></div><div className="quote-main"><span>Bundle quote</span><strong>{formatPeso(individualMin - discount)}–{formatPeso(individualMax - discount)}</strong></div><div className="quote-row save"><span>You save</span><strong>{formatPeso(discount)}</strong></div></> : <p className="quote-empty">Add packages to reveal your tailored bundle quotation.</p>}
-        <p className="quote-note">Final quotation varies based on project scope, complexity, requirements, timeline, and level of support needed.</p><a href="#contact" className="button button-dark" onClick={() => onRequest(`Bundle quotation request: ${chosen.map((pkg) => pkg.name).join(" + ")}\nQuotation range: ${formatPeso(individualMin - discount)}–${formatPeso(individualMax - discount)}\n\nI’d also like to ask about: `)}>Request This Bundle <ArrowRight size={17}/></a>
+        <p className="quote-note">Final quotation varies based on project scope, complexity, requirements, timeline, and level of support needed.</p><a href="#contact" className="button button-dark" onClick={() => onRequest(`Bundle request: ${chosen.map((pkg) => pkg.name).join(" + ")}\nQuotation range: ${formatPeso(individualMin - discount)}–${formatPeso(individualMax - discount)})}>Request This Bundle <ArrowRight size={17}/></a>
       </div>
     </div>
   </section>;
