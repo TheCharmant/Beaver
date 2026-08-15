@@ -94,14 +94,13 @@ const bundlePackages = [
 
 const formatPeso = (value: number) => `₱${value.toLocaleString("en-PH")}`;
 
-function BundleBuilder() {
+function BundleBuilder({ onRequest }: { onRequest: (message: string) => void }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [isOver, setIsOver] = useState(false);
   const chosen = bundlePackages.filter((pkg) => selected.includes(pkg.id));
   const individualMin = chosen.reduce((total, pkg) => total + pkg.min, 0);
   const individualMax = chosen.reduce((total, pkg) => total + pkg.max, 0);
-  const discountMin = chosen.length > 1 ? 1000 : 0;
-  const discountMax = chosen.length > 2 ? 2000 : chosen.length > 1 ? 1000 : 0;
+  const discount = chosen.length === 2 ? 1000 : chosen.length === 3 ? 2000 : chosen.length === 4 ? 3000 : 0;
   const addPackage = (id: string) => setSelected((current) => current.includes(id) ? current : [...current, id]);
   const removePackage = (id: string) => setSelected((current) => current.filter((item) => item !== id));
   const onDrop = (event: DragEvent<HTMLDivElement>) => {
@@ -113,7 +112,7 @@ function BundleBuilder() {
   return <section className="bundle" aria-labelledby="bundle-title">
     <div className="bundle-content">
       <p className="section-tag">BUILD YOUR BUNDLE</p>
-      <h2 id="bundle-title">Pick the support your<br/>project actually needs.</h2>
+      <h3 id="bundle-title">Pick the support your<br/>project actually needs.</h3>
       <p>Choose what you need, put it together, and get a clear quotation range before we talk details.</p>
       <div className="bundle-available" aria-label="Available packages">
         {bundlePackages.map((pkg) => {
@@ -132,8 +131,8 @@ function BundleBuilder() {
       </div>
       <div className={`quote-panel${chosen.length ? " has-quote" : ""}`} aria-live="polite">
         <div><p>Your Bundle</p><strong>{chosen.length ? `${chosen.length} ${chosen.length === 1 ? "package" : "packages"} selected` : "Start building"}</strong></div>
-        {chosen.length ? <><div className="quote-row"><span>Individual total</span><strong>{formatPeso(individualMin)}–{formatPeso(individualMax)}</strong></div><div className="quote-main"><span>Bundle quote</span><strong>{formatPeso(individualMin - discountMin)}–{formatPeso(individualMax - discountMax)}</strong></div><div className="quote-row save"><span>You save</span><strong>{formatPeso(discountMin)}{discountMax > discountMin ? `–${formatPeso(discountMax)}` : ""}</strong></div></> : <p className="quote-empty">Add packages to reveal your tailored bundle quotation.</p>}
-        <p className="quote-note">Final quotation varies based on project scope, complexity, requirements, timeline, and level of support needed.</p><a href="#contact" className="button button-dark">Request This Bundle <ArrowRight size={17}/></a>
+        {chosen.length ? <><div className="quote-row"><span>Individual total</span><strong>{formatPeso(individualMin)}–{formatPeso(individualMax)}</strong></div><div className="quote-main"><span>Bundle quote</span><strong>{formatPeso(individualMin - discount)}–{formatPeso(individualMax - discount)}</strong></div><div className="quote-row save"><span>You save</span><strong>{formatPeso(discount)}</strong></div></> : <p className="quote-empty">Add packages to reveal your tailored bundle quotation.</p>}
+        <p className="quote-note">Final quotation varies based on project scope, complexity, requirements, timeline, and level of support needed.</p><a href="#contact" className="button button-dark" onClick={() => onRequest(`Bundle quotation request: ${chosen.map((pkg) => pkg.name).join(" + ")}\nQuotation range: ${formatPeso(individualMin - discount)}–${formatPeso(individualMax - discount)}\n\nI’d also like to ask about: `)}>Request This Bundle <ArrowRight size={17}/></a>
       </div>
     </div>
   </section>;
@@ -143,7 +142,7 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Inquiry>({ resolver: zodResolver(inquirySchema) });
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<Inquiry>({ resolver: zodResolver(inquirySchema) });
   const submitInquiry = async (values: Inquiry) => {
     setSubmitError("");
     const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
@@ -183,7 +182,7 @@ export default function Home() {
     </section>
     <section className="intro"><p className="section-tag">WHAT WE DO</p><h2>From a rough idea to a polished final defense.</h2><p>We pair research rigor with practical engineering experience. The result? Structured projects that feel purposeful, polished, and ready for evaluation.</p><div className="stats"><div><strong>4</strong><span>core areas of support</span></div><div><strong>1:1</strong><span>project-focused guidance</span></div><div><strong>∞</strong><span>ideas worth building</span></div></div></section>
     <section className="packages" id="packages"><div className="section-head"><div><p className="section-tag">PACKAGE OFFERS</p><h2>Support that meets you<br/>where you are.</h2></div><p>Choose the expertise your project needs, exactly when it needs it.</p></div><div className="package-grid">{packages.map((pkg, i) => <motion.article initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.08}} key={pkg.title} className="package-card"><div className="card-icon"><pkg.icon size={22}/></div><h3>{pkg.title} Package</h3><p className="price">{pkg.price}</p><p className="card-description">{pkg.description}</p><ul>{pkg.items.map(item=><li key={item}><Check size={15}/>{item}</li>)}</ul><a href="#contact">View inclusions <ArrowRight size={16}/></a></motion.article>)}</div></section>
-    <BundleBuilder />
+    <BundleBuilder onRequest={(message) => setValue("message", message, { shouldDirty: true })} />
     <section className="process" id="process"><p className="section-tag">A SIMPLE PROCESS</p><h2>Less guessing. More building.</h2><div className="process-grid">{[["01","Tell us your vision","Share your idea, requirements, and where you need a hand."],["02","Get a clear plan","We scope the work and recommend the support that fits."],["03","Build with momentum","Move forward with a focused partner by your side."]].map(s=><div key={s[0]}><span>{s[0]}</span><h3>{s[1]}</h3><p>{s[2]}</p></div>)}</div></section>
 <section className="defense">
 
