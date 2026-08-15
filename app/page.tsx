@@ -13,7 +13,7 @@ const packages = [
   {
     icon: FileText,
     title: "Research",
-    price: "₱1,500 — ₱3,000",
+    price: "₱3,000 — ₱6,000+",
     description:
       "Designed for students who need assistance in developing and structuring their research foundation.",
     items: [
@@ -34,7 +34,7 @@ const packages = [
   {
     icon: Layers3,
     title: "Engineering",
-    price: "₱3,000 — ₱7,000",
+    price: "₱5,000 — ₱10,000+",
     description:
       "Designed for students who need technical planning and system design support.",
     items: [
@@ -54,7 +54,7 @@ const packages = [
   {
     icon: Code2,
     title: "Developer",
-    price: "₱8,000 — ₱25,000+",
+    price: "₱10,000 — ₱30,000+",
     description:
       "Designed for students who need software engineering assistance during development.",
     items: [

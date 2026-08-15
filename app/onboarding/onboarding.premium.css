@@ -1,0 +1,23 @@
+/* Premium navigation buttons: fix position and premium styling */
+.form-nav{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.nav-back,.nav-next{min-width:110px;padding:8px 12px;border-radius:8px;border:0;font-weight:600;font-size:13px;cursor:pointer}
+.nav-back{background:transparent;color:#7a6a5f;border:1px solid rgba(122,106,95,.12)}
+.nav-back:disabled{opacity:.6;cursor:not-allowed}
+.nav-next{background:linear-gradient(90deg,#d68b50,#a54f21);color:#fff;box-shadow:0 6px 16px rgba(165,79,33,.14);text-transform:uppercase;letter-spacing:.04em}
+.nav-next:disabled{opacity:.5;filter:grayscale(.2);cursor:not-allowed}
+@media(min-width:900px){
+  .form-nav{position:sticky;bottom:20px;background:transparent;padding:6px 0}
+}
+/* Small touch for edit links */
+.edit-link{margin-left:12px;background:transparent;border:0;color:#a54f21;font-weight:700;cursor:pointer}
+
+/* Premium small profile thumbnail */
+.profile-upload-inline{display:inline-flex;align-items:center;gap:10px}
+.profile-inline{position:relative;display:inline-grid}
+.profile-thumb{width:48px;height:48px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,.08);box-shadow:0 8px 20px rgba(165,79,33,.12)}
+.profile-thumb-placeholder{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg,#f7efe7,#efe0d2);color:#7a5a43}
+.profile-upload-inline .pic-overlay{position:absolute;right:-6px;bottom:-6px;background:#fff;padding:6px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#a54f21;border:1px solid rgba(165,79,33,.08)}
+.pic-overlay svg{display:block}
+.validation-hints{margin-top:10px;color:#8a6b58}
+.validation-hints ul{margin:6px 0 0 18px}
+.validation-hints li{font-size:13px}
