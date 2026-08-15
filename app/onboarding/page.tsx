@@ -496,6 +496,7 @@ export default function OnboardingPage() {
             selections,
             uploads,
             checks,
+            setChecks,
             profilePic,
             selectedBundles,
             selectedAddOns,
@@ -895,7 +896,7 @@ function Services({
 }: any) {
   const toggleBundle = (bundleName: string) => {
     if (services.includes(bundleName)) {
-      setServices(services.filter((s) => s !== bundleName));
+      setServices(services.filter((s: string) => s !== bundleName));
     } else {
       setServices([...services, bundleName]);
     }
@@ -1196,6 +1197,7 @@ function Review({
   selections,
   uploads,
   checks,
+  setChecks,
   profilePic,
   selectedBundles,
   selectedAddOns,

@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, CircleHelp, Code2, FileText, Layers3, Menu, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Check, ChevronDown, CircleHelp, Code2, FileText, Hand, Layers3, Menu, Plus, Sparkles, X } from "lucide-react";
+import { useState, type DragEvent } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -85,6 +85,60 @@ const faqs = [
 const inquirySchema = z.object({ name: z.string().min(2, "Please enter your name"), email: z.string().email("Enter a valid email"), message: z.string().min(10, "Tell us a little more about your project") });
 type Inquiry = z.infer<typeof inquirySchema>;
 
+const bundlePackages = [
+  { id: "research", name: "Research", label: "Research foundation", price: "₱3,000–₱6,000", min: 3000, max: 6000, icon: FileText },
+  { id: "engineering", name: "Engineering", label: "System design", price: "₱5,000–₱10,000", min: 5000, max: 10000, icon: Layers3 },
+  { id: "developer", name: "Developer", label: "Software support", price: "₱10,000–₱30,000", min: 10000, max: 30000, icon: Code2 },
+  { id: "defense", name: "Defense", label: "Defense preparation", price: "₱2,500–₱5,000", min: 2500, max: 5000, icon: CircleHelp },
+] as const;
+
+const formatPeso = (value: number) => `₱${value.toLocaleString("en-PH")}`;
+
+function BundleBuilder() {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [isOver, setIsOver] = useState(false);
+  const chosen = bundlePackages.filter((pkg) => selected.includes(pkg.id));
+  const individualMin = chosen.reduce((total, pkg) => total + pkg.min, 0);
+  const individualMax = chosen.reduce((total, pkg) => total + pkg.max, 0);
+  const discountMin = chosen.length > 1 ? 1000 : 0;
+  const discountMax = chosen.length > 2 ? 2000 : chosen.length > 1 ? 1000 : 0;
+  const addPackage = (id: string) => setSelected((current) => current.includes(id) ? current : [...current, id]);
+  const removePackage = (id: string) => setSelected((current) => current.filter((item) => item !== id));
+  const onDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsOver(false);
+    addPackage(event.dataTransfer.getData("text/plain"));
+  };
+
+  return <section className="bundle" aria-labelledby="bundle-title">
+    <div className="bundle-content">
+      <p className="section-tag">BUILD YOUR BUNDLE</p>
+      <h2 id="bundle-title">Pick the support your<br/>project actually needs.</h2>
+      <p>Choose what you need, put it together, and get a clear quotation range before we talk details.</p>
+      <div className="bundle-available" aria-label="Available packages">
+        {bundlePackages.map((pkg) => {
+          const added = selected.includes(pkg.id);
+          const Icon = pkg.icon;
+          return <button key={pkg.id} type="button" draggable={!added} disabled={added} className={`bundle-option${added ? " added" : ""}`} onClick={() => addPackage(pkg.id)} onDragStart={(event) => event.dataTransfer.setData("text/plain", pkg.id)}>
+            <span className="bundle-option-icon"><Icon size={16}/></span><span><strong>{pkg.name}</strong><small>{pkg.label} · {pkg.price}</small></span>{added ? <em>Added</em> : <Plus size={16} aria-hidden="true"/>}
+          </button>;
+        })}
+      </div>
+    </div>
+    <div className="bundle-builder">
+      <div className={`bundle-pot${isOver ? " is-over" : ""}${chosen.length ? " has-items" : ""}`} onDragOver={(event) => { event.preventDefault(); setIsOver(true); }} onDragLeave={() => setIsOver(false)} onDrop={onDrop} aria-label="Your bundle drop zone">
+        <div className="pot-rim"><span>Your bundle</span><span>{chosen.length} {chosen.length === 1 ? "package" : "packages"} selected</span></div>
+        <div className="pot-content"><AnimatePresence initial={false}>{!chosen.length ? <motion.div className="bundle-empty" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}><Hand size={22}/><strong>Drop packages here</strong><span>Build your own capstone support bundle.</span></motion.div> : chosen.map((pkg) => { const Icon = pkg.icon; return <motion.div key={pkg.id} className="bundle-selected" initial={{ opacity: 0, y: 18, scale: .9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: .9 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}><span className="bundle-selected-icon"><Icon size={17}/></span><span><strong>{pkg.name}</strong><small>{pkg.price}</small></span><button type="button" onClick={() => removePackage(pkg.id)} aria-label={`Remove ${pkg.name} package`}><X size={16}/></button></motion.div>; })}</AnimatePresence></div>
+      </div>
+      <div className={`quote-panel${chosen.length ? " has-quote" : ""}`} aria-live="polite">
+        <div><p>Your Bundle</p><strong>{chosen.length ? `${chosen.length} ${chosen.length === 1 ? "package" : "packages"} selected` : "Start building"}</strong></div>
+        {chosen.length ? <><div className="quote-row"><span>Individual total</span><strong>{formatPeso(individualMin)}–{formatPeso(individualMax)}</strong></div><div className="quote-main"><span>Bundle quote</span><strong>{formatPeso(individualMin - discountMin)}–{formatPeso(individualMax - discountMax)}</strong></div><div className="quote-row save"><span>You save</span><strong>{formatPeso(discountMin)}{discountMax > discountMin ? `–${formatPeso(discountMax)}` : ""}</strong></div></> : <p className="quote-empty">Add packages to reveal your tailored bundle quotation.</p>}
+        <p className="quote-note">Final quotation varies based on project scope, complexity, requirements, timeline, and level of support needed.</p><a href="#contact" className="button button-dark">Request This Bundle <ArrowRight size={17}/></a>
+      </div>
+    </div>
+  </section>;
+}
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sent, setSent] = useState(false);
@@ -129,7 +183,7 @@ export default function Home() {
     </section>
     <section className="intro"><p className="section-tag">WHAT WE DO</p><h2>From a rough idea to a polished final defense.</h2><p>We pair research rigor with practical engineering experience. The result? Structured projects that feel purposeful, polished, and ready for evaluation.</p><div className="stats"><div><strong>4</strong><span>core areas of support</span></div><div><strong>1:1</strong><span>project-focused guidance</span></div><div><strong>∞</strong><span>ideas worth building</span></div></div></section>
     <section className="packages" id="packages"><div className="section-head"><div><p className="section-tag">PACKAGE OFFERS</p><h2>Support that meets you<br/>where you are.</h2></div><p>Choose the expertise your project needs, exactly when it needs it.</p></div><div className="package-grid">{packages.map((pkg, i) => <motion.article initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.08}} key={pkg.title} className="package-card"><div className="card-icon"><pkg.icon size={22}/></div><h3>{pkg.title} Package</h3><p className="price">{pkg.price}</p><p className="card-description">{pkg.description}</p><ul>{pkg.items.map(item=><li key={item}><Check size={15}/>{item}</li>)}</ul><a href="#contact">View inclusions <ArrowRight size={16}/></a></motion.article>)}</div></section>
-    <section className="bundle"><div className="bundle-content"><p className="section-tag">BUNDLED OFFERS</p><h2>A complete partner<br/>for your capstone.</h2><p>For teams who want continuity from the very first research question all the way to the final presentation.</p><a href="#contact" className="button button-dark">Find your package <ArrowRight size={17}/></a></div><div className="bundle-list"><div><span>01</span><div><h3>Starter Capstone</h3><p>Research + Engineering + Basic Defense Preparation</p></div><strong>₱7k–₱12k</strong></div><div><span>02</span><div><h3>Complete Capstone</h3><p>Research + Engineering + Software Development + Defense Preparation</p></div><strong>₱20k–₱40k+</strong></div><div><span>03</span><div><h3>Premium Partnership</h3><p>Research + Engineering + Software Development + Defense Preparation + Unlimited Revisions + Priority Support + Post-Defense Support</p></div><strong>₱50k+</strong></div></div></section>
+    <BundleBuilder />
     <section className="process" id="process"><p className="section-tag">A SIMPLE PROCESS</p><h2>Less guessing. More building.</h2><div className="process-grid">{[["01","Tell us your vision","Share your idea, requirements, and where you need a hand."],["02","Get a clear plan","We scope the work and recommend the support that fits."],["03","Build with momentum","Move forward with a focused partner by your side."]].map(s=><div key={s[0]}><span>{s[0]}</span><h3>{s[1]}</h3><p>{s[2]}</p></div>)}</div></section>
 <section className="defense">
 
